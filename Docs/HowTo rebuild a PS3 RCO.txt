@@ -1,0 +1,36 @@
+﻿How to rebuild a PS3 RCO with custom GIM images using Rcomage and GimConv
+-------------------------------------------------------------------------
+http://www.psdevwiki.com/ps3/Template:How_to_rebuild_a_PS3_RCO_with_custom_GIM_images_using_Rcomage_and_GimConv
+
+
+╔═════════════════╗
+║ 1 - Extract RCO ║
+╚═════════════════╝
+Use Rcomage.exe to dump the RCO contents without image conversions (so GIM files are extracted as GIM) to a folder named "RebuildMe"
+This files are going to be used to identify the original GIM setting, and for RCO rebuilding purposes
+╔════════════════╗
+║ 2 - GIM to PNG ║
+╚════════════════╝
+Identify visually the image you want to customize by converting it to PNG. The conversion to PNG can be made by two optional ways:
+    2a - Use Rcomage.exe to extract the RCO contents with image conversions (so GIM files are extracted and converted to PNG) to a folder named "DontRebuildMe"
+    2b - Or use GimConv.exe to convert an original "icon.gim" (from "RebuildMe" folder) to "icon.png" with the command: "gimconv.exe icon.gim -o icon.png"
+╔════════════════╗
+║ 3 - Custom PNG ║
+╚════════════════╝
+Use "icon.png" as the base (mostly to respect the original width and height) and customize it with any image edition program (gimp, photoshop, etc...)
+╔═══════════════════════════╗
+║ 4 - Identify GIM settings ║
+╚═══════════════════════════╝
+Use GimConv.exe to identify the original GIM settings of "icon.gim" (from "RebuildMe" folder) by making GIM-to-GIM conversions
+╔════════════════╗
+║ 5 - PNG to GIM ║
+╚════════════════╝
+Use GimConv.exe to convert the custom "icon.png" (from step 3) to "icon.gim" with the original GIM settings you found (in step 4)
+╔════════════════════════════╗
+║ 6 - Overwrite original GIM ║
+╚════════════════════════════╝
+Copy the custom "icon.gim" to "RebuildMe" folder overwriting the original "icon.gim"
+╔═══════════════╗
+║ 7 - Build RCO ║
+╚═══════════════╝
+Use Rcomage.exe to compile the RCO with the files from "RebuildMe" folder

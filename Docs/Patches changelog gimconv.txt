@@ -1,0 +1,82 @@
+╔═══════════╗
+║ v20180520 ║
+╚═══════════╝
+Initial version
+
+GimConv.exe (patched versions)
+------------------------------
+        GimConv.exe  (v1.20h patched to v1.20e). Set as default
+        GimConvC.exe (v1.20h patched to v1.20c). Handy to identify 1st most common GIM settings in pre-retail PS3 firmwares
+        GimConvD.exe (v1.20h patched to v1.20d)
+        GimConvE.exe (v1.20h patched to v1.20e). Handy to identify 1st most common GIM settings in retail PS3 firmwares
+        GimConvF.exe (v1.20h patched to v1.20f)
+        GimConvG.exe (v1.20h patched to v1.20g)
+        GimConvH.exe (v1.20h original, not patched, just renamed)
+
+GimConv.cfg (added info in the help screen)
+-------------------------------------------
+    options:
+        -psprgba<n>         <n>: 5650, 5551, 4444, 8888
+        -pspindex<n>        <n>: 4, 8
+        -ps3rgba<n>         <n>: 5650, 5551, 4444, 8888
+        -ps3index<n>        <n>: 4, 8, 16, 32
+        -ps3dxt<n>          <n>: 1, 3, 5, 1ext, 3ext, 5ext
+    examples GIM-to-PNG:
+        gimconv input.gim -o output.png
+    examples GIM-to-GIM:
+        gimconv original.gim -o try1.gim -ps3rgba8888
+        gimconv original.gim -o try2.gim -ps3rgba8888 --update_fileinfo on
+        gimconv original.gim -o try3.gim -ps3dxt5
+    examples PNG-to-GIM:
+        gimconv custom.png -o 1stMostCommonInPS3.gim -ps3rgba8888
+        gimconv custom.png -o 2ndMostCommonInPS3.gim -ps3dxt5
+        gimconv custom.png -o unknownSupportInPS3.gim -ps3rgba4444
+        gimconv custom.png -o unknownSupportInPS3.gim -ps3index8
+        gimconv custom.png -o unknownPurposeInPS3.gim -ps3dxt5ext
+    examples GIS:
+        gimconv custom.png -o ps3rgba8888.gis -ps3rgba8888 -S
+        gimconv ps3rgba8888.gis
+
+GimConv.cfg (added options)
+---------------------------
+    PSP RGBA image formats
+        -psprgba5650
+        -psprgba5551
+        -psprgba4444
+        -psprgba8888
+    PSP INDEXED image formats
+        -pspindex4
+        -pspindex8
+    PS3 RGBA image formats
+        -ps3rgba5650
+        -ps3rgba5551
+        -ps3rgba4444
+        -ps3rgba8888 (1st most common GIM settings in PS3 firmwares)
+    PS3 INDEXED image formats
+        -ps3index4
+        -ps3index8
+        -ps3index16
+        -ps3index32
+    PS3 DXT image formats
+        -ps3dxt1
+        -ps3dxt3
+        -ps3dxt5 (2nd most common GIM settings in PS3 firmwares)
+        -ps3dxt1ext
+        -ps3dxt3ext
+        -ps3dxt5ext
+
+GimConv.cfg (restored default settings from official GimConv.cfg)
+-----------------------------------------------------------------
+    default
+        limit_image_width = 4096 (Removed the 512 pixels image size restriction)
+        limit_image_height = 4096 (Removed the 512 pixels image size restriction)
+        output_sequence = on (Doesnt causes any change in the output GIM files anyway)
+
+GimConv.cfg (restored options from official GimConv.cfg)
+--------------------------------------------------------
+    options
+        -viewer
+        -F
+        -B
+        -R
+        -DXT

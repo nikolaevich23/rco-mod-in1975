@@ -1,0 +1,56 @@
+﻿How to identify GIM settings by bruteforce
+------------------------------------------
+http://www.psdevwiki.com/ps3/GimConv#By_bruteforce
+
+The goal of this process is to create a GIM file exactly like the original by doing GIM-to-GIM conversions
+In every identification attempt are used different GIM settings, and every GIM file generated is compared with the original GIM (by a hash check)
+The "bruteforce game" ends when the hashes of both the original and generated GIM files matches, in other words, you have found the original GIM settings used by sony to create that specific GIM file
+This process needs to be made for every GIM file because in PS3 there are (at least) two different GIM types, and usually a single RCO file contains different GIM types
+
+
+First, try to identify the GIM type by using the most common GIM settings for PS3, by using this command:
+╔═══════════════════════════════════════════════════╗
+║ gimconv.exe original.gim -o try1.gim -ps3rgba8888 ║
+╚═══════════════════════════════════════════════════╝
+Compare the hashes of "original.gim" versus "try1.gim", if hashes matches you got it at first try !. It means you can replace that GIM by using a custom.png as input with the same command you used to create "try1.gim", this way:
+╔═══════════════════════════════════════════════════════════════╗
+║ gimconv.exe custom.png -o 1stMostCommonInPS3.gim -ps3rgba8888 ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+Else (if hashes doest matches), try this:
+╔════════════════════════════════════════════════════════════════════════╗
+║ gimconv.exe original.gim -o try2.gim -ps3rgba8888 --update_fileinfo on ║
+╚════════════════════════════════════════════════════════════════════════╝
+This command is a variant of the previous, is used to identify GIM files that have an additional area at bottom named "fileinfo". This area contains info about who/when/how the GIM file was created, by using this command the fileinfo area from the "original.gim" is preserved and added to the output "try2.gim" allowing to create a GIM that matches exactly with the original (see *Notes* below)
+you SHOULD NOT create custom GIM files with fileinfo for normal usage on a PS3 (because you dont want to add fileinfo about you and your PC at bottom of your custom GIM file, right ?), this is only for identification purposes, to replace this GIM files by custom ones you should build them with the same command from the previous example (note is the same image format, but without the fileinfo)
+╔═══════════════════════════════════════════════════════════════╗
+║ gimconv.exe custom.png -o 1stMostCommonInPS3.gim -ps3rgba8888 ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+Else (if hashes doest matches), try this:
+╔════════════════════════════════════════════╗
+║ gimconv.exe original.gim -o try3.gim -dxt5 ║
+╚════════════════════════════════════════════╝
+This is the second most common GIM type used in PS3 (and are very common, most RCO files has a few). It seems in official PS3 firmware never was used a variant of this GIM type with the added "fileinfo" area at bottom, so the identification process is straightworward (there is no need to repeat the same command with the fileinfo variant), if hashes matches you found it and you can replace this GIM file by a custom.png created this way:
+╔════════════════════════════════════════════════════════╗
+║ gimconv.exe custom.png -o 2ndMostCommonInPS3.gim -dxt5 ║
+╚════════════════════════════════════════════════════════╝
+
+
+
+
+
+*Notes* (about fileinfo and GimConv versions)
+---------------------------------------------
+In the previous command example the option "--update_fileinfo" copyes the fileinfo area from the input "original.gim" and adds it to the output "try2.gim" BUT NOT ENTIRELLY !
+At the end of the fileinfo area there is a text string with the name and version of the tool that generated the GIM (the tool name is always "GimConv", and the version uses to be "1.20e" but not always), this string inside the fileinfo area is updated when you do a GIM-to-GIM conversion
+The problem is the only public GimConv.exe available is "GimConv 1.20h", so if the original RCO was made by "GimConv 1.20e" and you make a GIM-to-GIM conversion by using "GimConv 1.20h" the hash comparison (original GIM vs rebuild GIM) will not match because 1 byte of difference (e VS h)
+
+To solve this problem and to be able to automatize the bruteforce identification procedures i created several GimConv.exe files with the version patched
+
+There are lot of GIM files in PS3 retail firmwares made with GimConv 1.20e (and a timestamp of 2006 but are included up to retail 4.82 firmware because never was updated or replaced), so initially is better to use "GimConv 1.20e" always
+If you are doing some research in older firmwares try with the other versions, specially GimConvC.exe because some GIM files in PS3 pre-retail firmwares was made with "GimConv 1.20c"
+If you are having problems with this, or you are not getting an exact match when doing a hash comparison, open the original GIM files in a hexeditor and scroll down to the end of the file to see the GimConv versions sony used originally
+For more detailed info about GIM structure see: http://www.psdevwiki.com/ps3/Graphic_Image_Map_(GIM)
