@@ -14,7 +14,7 @@ if not exist %%~pi%%~ni\img md %%~pi%%~ni\img
 set im=%%~dpi%%~ni\img
 set ld=%%~dpi%%~ni
 )
-if exist %im%\list.txt del /Q %im%\list.txt
+if exist %ld%\list.txt del /Q %ld%\list.txt
 
 for %%f in (%im%\*.gim) do (
 for /f "usebackq" %%a in (`%pt%sfk hexdump -pure -nofile -rawname -offlen %tl% %%f`) do set np=%%a
