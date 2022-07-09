@@ -11,12 +11,13 @@ if not exist %%~pi%%~ni md %%~pi%%~ni
 if not exist %%~pi%%~ni\txt md %%~pi%%~ni\txt
 if not exist %%~pi%%~ni\img md %%~pi%%~ni\img
 %pt%rcomage.exe dump %%i %%~dpi%%~ni.xml --RESDIR %%~dpi%%~ni --text txt --images img
-set im=%%~dpi%%~ni\img
 set ld=%%~dpi%%~ni
+set ln=%%~ni
 )
-if exist %ld%\list.txt del /Q %ld%\list.txt
 
-for %%f in (%im%\*.gim) do (
+if exist !ld!\!ln!-list.txt del /Q !ld!\!ln!-list.txt
+
+for %%f in (%ld%\img\*.gim) do (
 for /f "usebackq" %%a in (`%pt%sfk hexdump -pure -nofile -rawname -offlen %tl% %%f`) do set np=%%a
 if !np!==0000 set opt=-ps3rgba5650
 if !np!==0001 set opt=-ps3rgba5551
@@ -32,9 +33,11 @@ if !np!==000A set opt=-ps3dxt5
 if !np!==0108 set opt=-ps3dxt1ext
 if !np!==0109 set opt=-ps3dxt3ext
 if !np!==010A set opt=-ps3dxt5ext
-echo %%~nf !opt! >> %ld%\list.txt
-GimConv\GimConv.exe %%f -o %im%\%%~nf.png 
+echo %%~nf !opt! >> !ld!\!ln!-list.txt
+GimConv\GimConv.exe %%f -o !ld!\img\%%~nf.png 
 del /Q %%f
 )
 echo Finished. |!col! 0A
 !pt!Wbusy "rco unpack" "Done" /Stop /sound /timeout:1
+
+:end
