@@ -39,5 +39,3 @@ del /Q %%f
 )
 echo Finished. |!col! 0A
 !pt!Wbusy "rco unpack" "Done" /Stop /sound /timeout:1
-
-:end
