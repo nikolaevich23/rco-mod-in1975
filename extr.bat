@@ -1,14 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
-set pt=.\Rcomage\
+set pt=Rcomage\
 set tl=0x44 0x02
+set col=!pt!nhcolor
 
-for %%i in (.\rcofile\*.rco) do (
+start !pt!Wbusy "rco unpack" "Running unpack rco"  /marquee 
+
+for %%i in (rcofile\*.rco) do (
 if not exist %%~pi%%~ni md %%~pi%%~ni
 if not exist %%~pi%%~ni\txt md %%~pi%%~ni\txt
 if not exist %%~pi%%~ni\img md %%~pi%%~ni\img
 %pt%rcomage.exe dump %%i %%~dpi%%~ni.xml --RESDIR %%~dpi%%~ni --text txt --images img
 set im=%%~dpi%%~ni\img
+set ld=%%~dpi%%~ni
 )
 if exist %im%\list.txt del /Q %im%\list.txt
 
@@ -28,8 +32,9 @@ if !np!==000A set opt=-ps3dxt5
 if !np!==0108 set opt=-ps3dxt1ext
 if !np!==0109 set opt=-ps3dxt3ext
 if !np!==010A set opt=-ps3dxt5ext
-echo %%~nf !opt! >> %im%\list.txt
-.\GimConv\GimConv.exe %%f -o %im%\%%~nf.png 
+echo %%~nf !opt! >> %ld%\list.txt
+GimConv\GimConv.exe %%f -o %im%\%%~nf.png 
 del /Q %%f
 )
-:end
+echo Finished. |!col! 0A
+!pt!Wbusy "rco unpack" "Done" /Stop /sound /timeout:1
