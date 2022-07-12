@@ -16,7 +16,6 @@ if not exist %%~pi%%~ni\txt md %%~pi%%~ni\txt
 if not exist %%~pi%%~ni\img md %%~pi%%~ni\img
 set ld=%%~dpi%%~ni
 set ln=%%~ni
-set /a n1=0
 for /f "usebackq" %%h in (`!pt!sfk hexdump -pure -nofile -rawname -offlen !hdr! %%i`) do set hc=%%h
 if !hc!==00000000 set opt=none
 if !hc!==00000010 set opt=zlib
@@ -25,14 +24,10 @@ echo !opt! > !ld!\!ln!-conf.txt
 !pt!rcomage.exe dump %%i !ld!.xml --RESDIR !ld! --text txt --images img
 if exist !ld!\!ln!-list.txt del /Q !ld!\!ln!-list.txt
 
-for /f "tokens=*" %%m in ('CertUtil -hashfile %%i MD5') do (
-set /a n1+=1 && if !n1!==2 set hash=%%m && set MD5=!hash: =!
-)
-echo %%i !MD5! > %%i.md5
-
 for %%f in (!ld!\img\*.gim) do (
 echo check %%f 
 set /a rez=0
+set /a n1=0
 for /f "usebackq" %%a in (`!pt!sfk hexdump -pure -nofile -rawname -offlen !tl! %%f`) do set np=%%a
 if !np!==0000 set opt=-ps3rgba5650
 if !np!==0001 set opt=-ps3rgba5551
@@ -55,18 +50,21 @@ for %%l in ("%%f") do set size=%%~zl
 IF !rez! LEQ !size! (
 !pt!sfk partcopy %%f -quiet -allfrom -yes !rez! !ld!\%%~nf.vtxt
 !pt!sfk rep !ld!\%%~nf.vtxt -bin /00/0D0A/ -yes -quiet
-set /a c=0
 for /f "UseBackQ Delims=" %%V IN (!ld!\%%~nf.vtxt) do (
 set /a c+=1
 if !c!==4 set "cver=%%V"
 )
 echo !cver!> !ld!\%%~nf.vtxt
 )
-echo %%~nf !opt!>> !ld!\!ln!-list.txt
+set /a c=0
+for /f "tokens=*" %%m in ('CertUtil -hashfile %%f MD5') do (
+set /a n1+=1 && if !n1!==2 set hash=%%m && set MD5=!hash: =!
+)
+echo %%~nf !opt! !MD5!>> !ld!\!ln!-list.txt
 GimConv\GimConv.exe %%f -o !ld!\img\%%~nf.png 
 )
 )
-rem del /Q /S rcofile\*.gim
+del /Q /S rcofile\*.gim
 
 echo Finished. |!col! 0A
 !pt!Wbusy "rco unpack" "Done" /Stop /sound /timeout:1
